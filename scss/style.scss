@@ -1,0 +1,12 @@
+//  both frontend and edit CSS
+.user-download {
+  // background: red;
+
+  &__block {
+    // background: green;
+  }
+
+  &__a > img {
+      display: block;
+  }
+}

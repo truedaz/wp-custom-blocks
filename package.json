@@ -1,0 +1,23 @@
+{
+  "name": "my-custom-block",
+  "version": "1.0.0",
+  "description": "My Custom Block for Gutenberg",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "npm run build:js && npm run build:css",
+    "build:css": "sass --no-source-map scss/style.scss build/style.css && sass --no-source-map scss/editor.scss build/editor.css",
+    "build:js": "wp-scripts build",
+    "start": "concurrently \"npm run start:css\" \"npm run start:js\"",
+    "start:css": "sass --watch scss/style.scss build/style.css --style compressed && sass --watch scss/editor.scss build/editor.css --style compressed",
+    "start:js": "wp-scripts start"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^27.7.0",
+    "concurrently": "^8.2.2",
+    "sass": "^1.75.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "webpack": "^5.91.0"
+  }
+}
