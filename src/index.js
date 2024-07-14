@@ -9,8 +9,8 @@ import { TextControl, PanelBody } from '@wordpress/components';
 
 
 registerBlockType('my-plugin/my-custom-block', {
-    title: __('My Custom Block', 'text-domain'),
-    icon: 'smiley',
+    title: __('Login protected download', 'text-domain'),
+    icon: 'download',
     category: 'common',
     attributes: {
         content: {
@@ -93,7 +93,7 @@ registerBlockType('my-plugin/my-custom-block', {
                     </PanelBody>
                 </InspectorControls>
                 { pdfUrl && thumbnailUrl && (
-                    <a href={pdfUrl} className="download-link" target="_blank">
+                    <a className="download-link" target="_blank">
                         <img src={thumbnailUrl} alt="PDF Thumbnail" />Download Now
                     </a>
                 )}
