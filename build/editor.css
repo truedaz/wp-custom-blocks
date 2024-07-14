@@ -1,1 +1,9 @@
-
+.user-download-block p {
+  margin-bottom: 1em;
+}
+.user-download-block .download-link {
+  display: block;
+}
+.user-download-block img {
+  display: block;
+}

@@ -15,8 +15,8 @@ registerBlockType('my-plugin/my-custom-block', {
     attributes: {
         content: {
             type: 'string',
-            source: 'html',
-            selector: 'p',
+            selector: 'h5',
+            default: 'File Title'
         },
         pdfUrl: {
             type: 'string',
@@ -28,18 +28,19 @@ registerBlockType('my-plugin/my-custom-block', {
         },
         customText: {
             type: 'string',
-            source: 'text', // required to pass attribute
             selector: '.custom-text',
-            default: 'Default custom text'
+            default: ''
         }
     },
 
+    // This is how its displayed in the Admin
     edit: (props) => {
         const { attributes: { content, pdfUrl, thumbnailUrl, customText }, setAttributes, className } = props;
 
         const onSelectPDF = (media) => {
             const pdfUrl = media.url;
             let thumbnailUrl = '';
+            // console.log('Checking block.');
             // Check if media details include sizes and 'thumbnail' size exists
             if (media.sizes && media.sizes.thumbnail) {
                 thumbnailUrl = media.sizes.thumbnail.url;
@@ -62,11 +63,11 @@ registerBlockType('my-plugin/my-custom-block', {
         return (
             <div className="user-download-block">
                 <RichText
-                    tagName="p"
+                    tagName="h5"
                     className={ className }
                     onChange={ (newContent) => setAttributes({ content: newContent }) }
                     value={ content }
-                    placeholder={ __('Write your custom message', 'text-domain') }
+                    placeholder={ __('File title', 'text-domain') }
                 />
                 <MediaUploadCheck>
                     <MediaUpload
@@ -86,41 +87,48 @@ registerBlockType('my-plugin/my-custom-block', {
                             label="Custom Text"
                             value={customText}
                             onChange={onChangeCustomText}
+                            placeholder={ __('Description', 'text-domain') }
+
                         />
                     </PanelBody>
                 </InspectorControls>
-                { pdfUrl && (
-                    <a href={ pdfUrl }>Download PDF</a>
+                { pdfUrl && thumbnailUrl && (
+                    <a href={pdfUrl} className="download-link" target="_blank">
+                        <img src={thumbnailUrl} alt="PDF Thumbnail" />Download Now
+                    </a>
                 )}
-                { thumbnailUrl && (
-                    <img src={ thumbnailUrl } alt="PDF Thumbnail" />
+                { pdfUrl && !thumbnailUrl && (
+                    <a href={pdfUrl} className="download-link" target="_blank">Download Now</a>
                 )}
-
             </div>
         );
     },
 
-save: ({ attributes }) => {
-    const { content, pdfUrl, thumbnailUrl, customText } = attributes;
-    return (
-        <div className="user-download-block">
-            <RichText.Content
-                tagName="p"
-                value={content}
-            />
-            <RichText.Content
-                tagName="p"
-                className="custom-text"
-                value={customText}
-            />
-            { pdfUrl && (
-                <a href={pdfUrl}>Download PDF</a>
-            )}
-            { thumbnailUrl && (
-                <img src={thumbnailUrl} alt="PDF Thumbnail" />
-            )}
-        </div>
-    );
-},
+    // this is whats saved in the Admin and will display on frontend after save
+    save: ({ attributes }) => {
+        const { content, pdfUrl, thumbnailUrl, customText } = attributes;
+        return (
+            <div className="user-download-block">
+                <RichText.Content
+                    tagName="h5"
+                    className="file-title"
+                    value={content}
+                />
+                <RichText.Content
+                    tagName="p"
+                    className="additional-text"
+                    value={customText}
+                />
+                { pdfUrl && thumbnailUrl && (
+                    <a href={pdfUrl} className="download-link" target="_blank">
+                        <img src={thumbnailUrl} alt="PDF Thumbnail" />Download Now
+                    </a>
+                )}
+                { pdfUrl && !thumbnailUrl && (
+                    <a href={pdfUrl} className="download-link" target="_blank">Download Now</a>
+                )}
+            </div>
+        );
+    },
 
 });

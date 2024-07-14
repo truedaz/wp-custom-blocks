@@ -41,7 +41,7 @@ function my_custom_block_register() {
       'attributes' => array(
           'content' => array(
               'type' => 'string',
-              'default' => '',
+              'default' => 'default - not collected',
           ),
           'pdfUrl' => array(
               'type' => 'string',
@@ -59,39 +59,41 @@ function my_custom_block_register() {
 
 add_action( 'init', 'my_custom_block_register' );
 
+// function my_custom_block_render_callback($attributes, $content) {
+//     // Output the saved content directly. This should include the PDF link.
+//     // Get the PDF URL and thumbnail URL from attributes
+//     $text = isset($attributes['content']) ? $attributes['content'] : '';
+//     $pdfUrl = isset($attributes['pdfUrl']) ? $attributes['pdfUrl'] : '';
+//     $customText = isset($attributes['customText']) ? $attributes['customText'] : '';
+//     $thumbnailUrl = isset($attributes['thumbnailUrl']) ? $attributes['thumbnailUrl'] : '';
+//     $output = 'text: ' . $text . '<br/>'; 
+//     $output .= 'pdfUrl: ' . $pdfUrl . '<br/>'; 
+//     $output .= 'customText: ' . $customText . '<br/>'; 
+//     $output .= 'thumbnailUrl: ' . $thumbnailUrl . '<br/>'; 
+
+//     return $output;
+
+// }
 function my_custom_block_render_callback($attributes, $content) {
     // Output the saved content directly. This should include the PDF link.
     // Get the PDF URL and thumbnail URL from attributes
+
+    if (is_user_logged_in()) return $content;
+
     $text = isset($attributes['content']) ? $attributes['content'] : '';
     $pdfUrl = isset($attributes['pdfUrl']) ? $attributes['pdfUrl'] : '';
     $customText = isset($attributes['customText']) ? $attributes['customText'] : '';
-    $thumbnailUrl = isset($attributes['thumbnailUrl']) ? $attributes['thumbnailUrl'] : '';
-    $file = $thumb = '';
+    $thumb = isset($attributes['thumbnailUrl']) ? $attributes['thumbnailUrl'] : '';
+    $my_account_url = wc_get_page_permalink('myaccount');
 
-    // Content structure for both logged in and logged out users
-    $output = '<div class="user-download__block ' . (is_user_logged_in() ? 'logged-in-content' : 'logged-out-content') . '">';
-    // $output .= '<p class="custom-text">' . esc_html($attributes['customText']) . '</p>';
-
-    // Show thumbnail for all users
-    if ($thumbnailUrl) {
-        $thumb .= '<img src="' . esc_url($thumbnailUrl) . '" alt="PDF Thumbnail">';
-    }
-
-    if (is_user_logged_in()) {
-        if ($pdfUrl) {
-                $output .= '<a href="' . esc_url($pdfUrl) . '" class="user-download__a" target="_blank">Download Now'.$thumb.'</a>';
-        }
-    } else {
-        if ($pdfUrl) {
-                $url = 'https://superdoula.local/my-account/';
-                $output .= 'Please <a href="'.$url.'" ><b>login</b></a> to download this content.';
-                $output .= '<a href="'.$url.'" class="user-download__a">' . $thumb . '</a>';
-        }
-
-    }
-    $output .= '<p class="custom-text">' . esc_html($customText) . '</p>';
-
-    $output .= '</div>';
+    // $file = $thumb = '';
+    $output = '<div class="wp-block-my-plugin-my-custom-block user-download-block">';
+    $output .= '<h5 class="file-title">'.$text.'</h5>';
+    $output .= '<p class="additional-text">'.$customText.'</p>';
+    $output .= '<a class="download-link" href="'.$my_account_url.'" >';
+    $output .= '<p>Please <b>Register</b> to download this content.</p>';
+    $output .= '<img decoding="async" src="'.$thumb.'" alt="PDF Thumbnail frontend">';
+    $output .= '<a/></div>';
 
     return $output;
 }
