@@ -1,8 +1,13 @@
 <?php
 /**
- * Plugin Name: My Custom Block
+ * Plugin Name: My Custom Block Plugin
+ * Plugin URI: https://superdoula.co.uk
+ * Description: A plugin to create a custom Gutenberg block for downloading files.
+ * Version: 1.0.0
+ * Author: Daz
  */
-function my_custom_block_enqueue() {
+
+ function my_custom_block_enqueue() {
     wp_enqueue_script(
         'my-custom-block',
         plugins_url( 'build/index.js', __FILE__ ),
